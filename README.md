@@ -1,67 +1,158 @@
 # Midnight Planner
 
-A modern full-stack application focused on micro-interactions, realistic physics, and an immersive user interface.
+A modern full-stack application focused on immersive interactions, realistic physics, and premium UI design.
 
-<div align="center">
-  <video src="./public/demo.mp4" width="600" controls autoplay loop muted></video>
-  <p><i>Drag the lamp cord to reveal the authentication interface.</i></p>
-</div>
+<p align="center">
+  <img src="./public/demo.gif" width="900" alt="Midnight Planner Demo" />
+</p>
 
-## About the Project
+<p align="center">
+  <i>Drag the lamp cord to reveal the authentication interface.</i>
+</p>
 
-Midnight Planner is a proof of concept demonstrating how authentication interfaces can evolve beyond traditional static forms. Utilizing physics-based animations (mass, stiffness, damping), the initial screen simulates a suspended lamp that, when pulled, illuminates the environment and reveals the secure access form.
+---
 
-Beneath the visual layer, the application is supported by a robust embedded backend, handling password cryptography and relational database persistence.
+## About
 
-## Technologies
+Midnight Planner is a portfolio project exploring how authentication experiences can become interactive rather than static.
 
-* Next.js
+Instead of displaying a traditional login screen, the application presents a suspended lamp with a pull cord. The user interacts directly with the scene to reveal the authentication interface through realistic motion and lighting effects.
+
+The project focuses on:
+
+* Physics-based interactions
+* Smooth animations
+* Dark premium UI
+* Authentication flows
+* Local database persistence
+* Clean architecture
+
+---
+
+## Features
+
+### Interactive Lamp Experience
+
+* Pull-cord interaction
+* Physics-inspired motion
+* Dynamic glow effects
+* Smooth spring animations
+* Immersive login experience
+
+### Authentication
+
+* User registration
+* User login
+* Password hashing with Bcrypt
+* Persistent local database
+
+### Development Stack
+
+* TypeScript
+* Modular architecture
+* API routes
+* Prisma ORM
+* SQLite database
+
+---
+
+## Tech Stack
+
+### Frontend
+
+* Next.js 16
 * React
+* TypeScript
 * Tailwind CSS
 * Framer Motion
-* Node.js
+
+### Backend
+
+* Next.js API Routes
 * Prisma ORM
 * SQLite
+
+### Security
+
 * Bcrypt.js
 
-## Getting Started
+---
 
-Requirements: Node.js installed on your local machine.
+## Installation
 
-1. Clone the repository
+### Clone the repository
+
 ```bash
-git clone [https://github.com/it0l/midnight-planner.git](https://github.com/it0l/midnight-planner.git)
+git clone https://github.com/it0l/midnight-planner.git
 cd midnight-planner
-Install dependencies
+```
 
-Bash
+### Install dependencies
+
+```bash
 npm install
-Environment Setup
-Create a .env file in the root directory and add the local database connection string:
+```
 
-Snippet de código
+### Create environment variables
+
+Create a `.env` file in the project root:
+
+```env
 DATABASE_URL="file:./dev.db"
-Database Initialization
-Generate the Prisma client and push the schema to the SQLite database:
+```
 
-Bash
+### Initialize the database
+
+```bash
 npx prisma generate
 npx prisma db push
-Run the development server
+```
 
-Bash
+### Start the development server
+
+```bash
 npm run dev
-Access http://localhost:3000 in your browser.
+```
 
-Architecture
-app/page.tsx
+Open:
 
-components/auth/LampLogin.tsx
+```txt
+http://localhost:3000
+```
 
-components/auth/LoginForm.tsx
+---
 
-app/api/auth/register/route.ts
+## Project Structure
 
-prisma/schema.prisma
+```txt
+src/
+│
+├── app/
+│   ├── api/
+│   └── page.tsx
+│
+├── components/
+│   ├── auth/
+│   └── lamp/
+│
+├── hooks/
+│
+├── lib/
+│
+└── prisma/
+```
 
-lib/prisma.ts
+---
+
+## Roadmap
+
+* [x] Interactive lamp scene
+* [x] Pull-cord authentication
+* [x] User registration
+* [x] User login
+* [x] SQLite persistence
+* [ ] Dashboard
+* [ ] Task management
+* [ ] Notes system
+* [ ] Auto-save
+* [ ] Calendar integration
