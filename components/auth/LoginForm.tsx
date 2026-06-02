@@ -7,9 +7,41 @@ import { Eye, EyeOff } from 'lucide-react';
 export default function LoginForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
+
+    try {
+      if (!isLogin) {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setMessage(data.error || 'Registration failed');
+        } else {
+          setMessage('Account created successfully. Please sign in.');
+          setIsLogin(true);
+          setPassword('');
+        }
+      } else {
+        setMessage('Login system pending implementation.');
+      }
+    } catch (error) {
+      setMessage('Connection error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -27,6 +59,19 @@ export default function LoginForm() {
           <p className="text-sm text-zinc-500 mt-2">
             {isLogin ? 'Enter your credentials to access your workspace' : 'Start your nocturnal journey'}
           </p>
+          
+          <AnimatePresence>
+            {message && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="mt-4 text-sm font-medium text-zinc-300 bg-zinc-800/50 py-2 px-4 rounded-md border border-zinc-700/50"
+              >
+                {message}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
@@ -34,6 +79,8 @@ export default function LoginForm() {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="block px-4 pb-2.5 pt-5 w-full text-sm text-zinc-100 bg-zinc-950/50 border border-zinc-800 rounded-xl appearance-none focus:outline-none focus:ring-0 focus:border-zinc-500 focus:bg-zinc-900 peer transition-all duration-300"
               placeholder=" "
               required
@@ -50,6 +97,8 @@ export default function LoginForm() {
             <input
               type={showPassword ? 'text' : 'password'}
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="block px-4 pb-2.5 pt-5 w-full text-sm text-zinc-100 bg-zinc-950/50 border border-zinc-800 rounded-xl appearance-none focus:outline-none focus:ring-0 focus:border-zinc-500 focus:bg-zinc-900 peer transition-all duration-300 pr-12"
               placeholder=" "
               required
@@ -85,16 +134,20 @@ export default function LoginForm() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-            className="w-full py-3 mt-4 bg-zinc-100 text-zinc-900 font-medium rounded-xl hover:bg-white hover:shadow-[0_0_20px_rgba(254,240,138,0.15)] transition-all duration-300"
+            disabled={isLoading}
+            className="w-full py-3 mt-4 bg-zinc-100 text-zinc-900 font-medium rounded-xl hover:bg-white hover:shadow-[0_0_20px_rgba(254,240,138,0.15)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLogin ? 'Sign In' : 'Sign Up'}
+            {isLoading ? 'Processing...' : isLogin ? 'Sign In' : 'Sign Up'}
           </motion.button>
         </form>
 
         <div className="text-center pt-2">
           <button
             type="button"
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setMessage('');
+            }}
             className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
           >
             {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}

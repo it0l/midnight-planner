@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Midnight Planner
+
+A modern full-stack application focused on micro-interactions, realistic physics, and an immersive user interface.
+
+<div align="center">
+  <video src="./public/demo.mp4" width="600" controls autoplay loop muted></video>
+  <p><i>Drag the lamp cord to reveal the authentication interface.</i></p>
+</div>
+
+## About the Project
+
+Midnight Planner is a proof of concept demonstrating how authentication interfaces can evolve beyond traditional static forms. Utilizing physics-based animations (mass, stiffness, damping), the initial screen simulates a suspended lamp that, when pulled, illuminates the environment and reveals the secure access form.
+
+Beneath the visual layer, the application is supported by a robust embedded backend, handling password cryptography and relational database persistence.
+
+## Technologies
+
+* Next.js
+* React
+* Tailwind CSS
+* Framer Motion
+* Node.js
+* Prisma ORM
+* SQLite
+* Bcrypt.js
 
 ## Getting Started
 
-First, run the development server:
+Requirements: Node.js installed on your local machine.
 
+1. Clone the repository
 ```bash
+git clone [https://github.com/it0l/midnight-planner.git](https://github.com/it0l/midnight-planner.git)
+cd midnight-planner
+Install dependencies
+
+Bash
+npm install
+Environment Setup
+Create a .env file in the root directory and add the local database connection string:
+
+Snippet de código
+DATABASE_URL="file:./dev.db"
+Database Initialization
+Generate the Prisma client and push the schema to the SQLite database:
+
+Bash
+npx prisma generate
+npx prisma db push
+Run the development server
+
+Bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Access http://localhost:3000 in your browser.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Architecture
+app/page.tsx
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+components/auth/LampLogin.tsx
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+components/auth/LoginForm.tsx
 
-## Learn More
+app/api/auth/register/route.ts
 
-To learn more about Next.js, take a look at the following resources:
+prisma/schema.prisma
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+lib/prisma.ts
