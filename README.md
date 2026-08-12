@@ -1,158 +1,100 @@
 # Midnight Planner
 
-A modern full-stack application focused on immersive interactions, realistic physics, and premium UI design.
+Experiência interativa de autenticação construída com Next.js. Uma luminária com cordão substitui a tela inicial tradicional: ao puxar o cordão, a interface é revelada com animações, iluminação e transições suaves.
 
 <p align="center">
-  <img src="./public/demo.gif" width="900" alt="Midnight Planner Demo" />
+  <img src="./public/demo.gif" width="900" alt="Demonstração da interface do Midnight Planner" />
 </p>
 
-<p align="center">
-  <i>Drag the lamp cord to reveal the authentication interface.</i>
-</p>
+## Estado atual
 
----
+O projeto está em desenvolvimento. A experiência visual e o cadastro de usuários estão implementados; login, sessão e área de produtividade ainda fazem parte do roadmap.
 
-## About
+### Implementado
 
-Midnight Planner is a portfolio project exploring how authentication experiences can become interactive rather than static.
+- interação de puxar o cordão da luminária;
+- animações e transições com Framer Motion;
+- formulário de cadastro e interface de login;
+- endpoint para criação de usuários;
+- validação de e-mail duplicado;
+- hash de senha com bcrypt;
+- persistência local com Prisma e SQLite.
 
-Instead of displaying a traditional login screen, the application presents a suspended lamp with a pull cord. The user interacts directly with the scene to reveal the authentication interface through realistic motion and lighting effects.
+### Planejado
 
-The project focuses on:
+- autenticação de login e gerenciamento de sessão;
+- dashboard do usuário;
+- gerenciamento de tarefas e anotações;
+- salvamento automático;
+- integração com calendário;
+- testes automatizados.
 
-* Physics-based interactions
-* Smooth animations
-* Dark premium UI
-* Authentication flows
-* Local database persistence
-* Clean architecture
+## Tecnologias
 
----
+| Camada | Tecnologias |
+| --- | --- |
+| Interface | Next.js 16, React 19, TypeScript, Tailwind CSS |
+| Animações | Framer Motion |
+| Backend | Next.js Route Handlers |
+| Dados | Prisma ORM e SQLite |
+| Segurança | bcryptjs para hash de senhas |
 
-## Features
+## Executando localmente
 
-### Interactive Lamp Experience
+### Pré-requisitos
 
-* Pull-cord interaction
-* Physics-inspired motion
-* Dynamic glow effects
-* Smooth spring animations
-* Immersive login experience
+- Node.js 20 ou superior
+- npm
 
-### Authentication
+### Instalação
 
-* User registration
-* User login
-* Password hashing with Bcrypt
-* Persistent local database
-
-### Development Stack
-
-* TypeScript
-* Modular architecture
-* API routes
-* Prisma ORM
-* SQLite database
-
----
-
-## Tech Stack
-
-### Frontend
-
-* Next.js 16
-* React
-* TypeScript
-* Tailwind CSS
-* Framer Motion
-
-### Backend
-
-* Next.js API Routes
-* Prisma ORM
-* SQLite
-
-### Security
-
-* Bcrypt.js
-
----
-
-## Installation
-
-### Clone the repository
-
-```bash
+~~~bash
 git clone https://github.com/it0l/midnight-planner.git
 cd midnight-planner
-```
-
-### Install dependencies
-
-```bash
 npm install
-```
-
-### Create environment variables
-
-Create a `.env` file in the project root:
-
-```env
-DATABASE_URL="file:./dev.db"
-```
-
-### Initialize the database
-
-```bash
+cp .env.example .env
 npx prisma generate
 npx prisma db push
-```
-
-### Start the development server
-
-```bash
 npm run dev
-```
+~~~
 
-Open:
+No Windows PowerShell, use:
 
-```txt
-http://localhost:3000
-```
+~~~powershell
+Copy-Item .env.example .env
+~~~
 
----
+Abra [http://localhost:3000](http://localhost:3000).
 
-## Project Structure
+## Estrutura principal
 
-```txt
-src/
-│
-├── app/
-│   ├── api/
-│   └── page.tsx
-│
-├── components/
-│   ├── auth/
-│   └── lamp/
-│
-├── hooks/
-│
-├── lib/
-│
-└── prisma/
-```
+~~~text
+app/
+├── api/auth/register/route.ts
+├── globals.css
+├── layout.tsx
+└── page.tsx
+components/auth/
+├── LampLogin.tsx
+└── LoginForm.tsx
+lib/
+└── prisma.ts
+prisma/
+└── schema.prisma
+~~~
 
----
+## Observações de segurança
+
+- Senhas são armazenadas como hash, nunca em texto puro.
+- O banco SQLite é local e não deve ser versionado.
+- Antes de disponibilizar o sistema publicamente, ainda são necessários sessão segura, rate limiting, validação mais rígida de entrada e proteção CSRF quando aplicável.
 
 ## Roadmap
 
-* [x] Interactive lamp scene
-* [x] Pull-cord authentication
-* [x] User registration
-* [x] User login
-* [x] SQLite persistence
-* [ ] Dashboard
-* [ ] Task management
-* [ ] Notes system
-* [ ] Auto-save
-* [ ] Calendar integration
+- [x] Experiência interativa da luminária
+- [x] Cadastro de usuário
+- [x] Persistência local
+- [ ] Login e sessão
+- [ ] Dashboard
+- [ ] Tarefas e anotações
+- [ ] Testes automatizados

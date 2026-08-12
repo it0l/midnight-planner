@@ -1,4 +1,3 @@
-import Lamp from "@/components/auth/Lamp";  
 import LampLogin from "@/components/auth/LampLogin";
 
 export default function Home() {
