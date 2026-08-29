@@ -1,100 +1,150 @@
 # Midnight Planner
 
-Experiência interativa de autenticação construída com Next.js. Uma luminária com cordão substitui a tela inicial tradicional: ao puxar o cordão, a interface é revelada com animações, iluminação e transições suaves.
+Midnight Planner is a night-themed personal workspace built with Next.js, Prisma and SQLite. Its visual identity starts with an interactive hanging lamp: pulling the cord reveals the authentication experience and opens a private workspace for personal notes.
 
 <p align="center">
-  <img src="./public/demo.gif" width="900" alt="Demonstração da interface do Midnight Planner" />
+  <img src="./public/demo.gif" width="900" alt="Midnight Planner lamp interaction" />
 </p>
 
-## Estado atual
+## Highlights
 
-O projeto está em desenvolvimento. A experiência visual e o cadastro de usuários estão implementados; login, sessão e área de produtividade ainda fazem parte do roadmap.
+- interactive lamp experience with Framer Motion
+- account registration with bcrypt password hashing
+- credential-based login
+- persistent server-side sessions
+- `HttpOnly`, `SameSite=Lax` authentication cookie
+- protected dashboard
+- private notes scoped to the authenticated user
+- create, edit and delete note flows
+- Prisma ORM with SQLite for local development
+- server-side authorization on note mutations
+- GitHub Actions validation for lint and production build
 
-### Implementado
+## Stack
 
-- interação de puxar o cordão da luminária;
-- animações e transições com Framer Motion;
-- formulário de cadastro e interface de login;
-- endpoint para criação de usuários;
-- validação de e-mail duplicado;
-- hash de senha com bcrypt;
-- persistência local com Prisma e SQLite.
-
-### Planejado
-
-- autenticação de login e gerenciamento de sessão;
-- dashboard do usuário;
-- gerenciamento de tarefas e anotações;
-- salvamento automático;
-- integração com calendário;
-- testes automatizados.
-
-## Tecnologias
-
-| Camada | Tecnologias |
+| Layer | Technology |
 | --- | --- |
-| Interface | Next.js 16, React 19, TypeScript, Tailwind CSS |
-| Animações | Framer Motion |
-| Backend | Next.js Route Handlers |
-| Dados | Prisma ORM e SQLite |
-| Segurança | bcryptjs para hash de senhas |
+| Framework | Next.js 16 / React 19 |
+| Language | TypeScript |
+| Styling | Tailwind CSS 4 |
+| Motion | Framer Motion |
+| Database | SQLite |
+| ORM | Prisma 6 |
+| Authentication | Custom server-side sessions + bcryptjs |
+| Icons | Lucide React |
 
-## Executando localmente
+## Architecture
 
-### Pré-requisitos
+```text
+Browser
+  |
+  | register / login
+  v
+Next.js Route Handlers
+  |
+  +--> bcrypt password verification
+  |
+  +--> random session token
+           |
+           +--> SHA-256 hash stored in database
+           +--> raw token stored only in HttpOnly cookie
 
-- Node.js 20 ou superior
+Authenticated request
+  |
+  v
+getCurrentUser()
+  |
+  v
+Protected dashboard / notes API
+  |
+  v
+Prisma -> SQLite
+```
+
+The raw session token is never persisted in the database. Only its SHA-256 hash is stored, while the browser receives the raw value in an `HttpOnly` cookie.
+
+## Project structure
+
+```text
+app/
+├── api/
+│   ├── auth/
+│   │   ├── login/route.ts
+│   │   ├── logout/route.ts
+│   │   └── register/route.ts
+│   └── notes/
+│       ├── [id]/route.ts
+│       └── route.ts
+├── dashboard/page.tsx
+├── layout.tsx
+└── page.tsx
+components/
+├── auth/
+│   ├── LampLogin.tsx
+│   └── LoginForm.tsx
+└── dashboard/
+    └── Dashboard.tsx
+lib/
+├── auth.ts
+└── prisma.ts
+prisma/
+└── schema.prisma
+```
+
+## Running locally
+
+### Requirements
+
+- Node.js 20+
 - npm
 
-### Instalação
+### Setup
 
-~~~bash
+```bash
 git clone https://github.com/it0l/midnight-planner.git
 cd midnight-planner
 npm install
 cp .env.example .env
-npx prisma generate
-npx prisma db push
+npm run db:push
 npm run dev
-~~~
+```
 
-No Windows PowerShell, use:
+PowerShell:
 
-~~~powershell
+```powershell
 Copy-Item .env.example .env
-~~~
+```
 
-Abra [http://localhost:3000](http://localhost:3000).
+The default local configuration is:
 
-## Estrutura principal
+```env
+DATABASE_URL="file:./dev.db"
+```
 
-~~~text
-app/
-├── api/auth/register/route.ts
-├── globals.css
-├── layout.tsx
-└── page.tsx
-components/auth/
-├── LampLogin.tsx
-└── LoginForm.tsx
-lib/
-└── prisma.ts
-prisma/
-└── schema.prisma
-~~~
+Then open `http://localhost:3000`.
 
-## Observações de segurança
+## Main flows
 
-- Senhas são armazenadas como hash, nunca em texto puro.
-- O banco SQLite é local e não deve ser versionado.
-- Antes de disponibilizar o sistema publicamente, ainda são necessários sessão segura, rate limiting, validação mais rígida de entrada e proteção CSRF quando aplicável.
+### Registration
 
-## Roadmap
+The API normalizes the email, validates basic input, enforces a minimum password length and stores only a bcrypt hash.
 
-- [x] Experiência interativa da luminária
-- [x] Cadastro de usuário
-- [x] Persistência local
-- [ ] Login e sessão
-- [ ] Dashboard
-- [ ] Tarefas e anotações
-- [ ] Testes automatizados
+### Login and session
+
+After credentials are verified, the server generates a cryptographically random session token. The database stores only a SHA-256 hash of that token. The raw token is sent to the browser through an `HttpOnly` cookie with a seven-day expiration.
+
+### Notes
+
+Every note operation resolves the authenticated user on the server. Update and delete operations include ownership checks so a user cannot mutate another user's notes by changing an ID in the request.
+
+## Security notes
+
+This repository is a portfolio/local-development project, not a production identity provider. It demonstrates secure fundamentals including password hashing, opaque server-side sessions, `HttpOnly` cookies and server-side authorization.
+
+For an internet-facing production deployment, additional controls should be considered, including rate limiting, CSRF strategy review, email verification, password reset flows, audit logging and a production database.
+
+Local SQLite database files are ignored and must not be committed.
+
+## Development status
+
+The original prototype focused on the lamp interaction and registration screen. The current version completes that concept into a usable MVP with authentication, session management, a protected workspace and persistent personal notes.
